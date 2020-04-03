@@ -16,11 +16,18 @@ import (
 )
 
 type DockerCfg struct {
-	ContainerEvents bool
-	VolumeEvents    bool
-	NetworkEvents   bool
-	ShowRunning     bool
+	ContainerEvents  bool
+	VolumeEvents     bool
+	NetworkEvents    bool
+	ShowRunning      bool
+	ContainerActions []string
+	NetworkActions   []string
+	VolumeActions    []string
+	FilterName       string
+	FilterImage      string
 }
+
+const maxErrors = 10
 
 type ContextDoneError struct {
 }
@@ -28,7 +35,13 @@ type ContextDoneError struct {
 func (c *ContextDoneError) Error() string { return "DockerEvents: Context done. Exit" }
 
 func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg) error {
+	eventFilter, err := newFilter(cfg)
+	if err != nil {
+		return err
+	}
+
 	cli, err := docker.NewEnvClient()
+
 	if err != nil {
 		return err
 	}
@@ -44,6 +57,7 @@ func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg) 
 	if v, err = cli.ServerVersion(ctx); err != nil {
 		return err
 	}
+
 	log.Println("Docker version", v.Version, "Api version", v.APIVersion)
 
 	cEvnt <- message.Event{
@@ -103,20 +117,25 @@ func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg) 
 		filters.Add("type", events.NetworkEventType)
 	}
 
-	events, cliErrors := cli.Events(ctx, types.EventsOptions{
+	evnts, cliErrors := cli.Events(ctx, types.EventsOptions{
 		Since:   "",
 		Until:   "",
 		Filters: filters,
 	})
 
 	errorCount := 0
+
 	for {
 		select {
-		case event := <-events:
+		case event := <-evnts:
 			errorCount = 0
-			if event.Type != "container" {
+
+			if !eventFilter.accept(event) {
+				continue
+			}
+
+			if event.Type != events.ContainerEventType {
 				if _, ok := event.Actor.Attributes["container"]; !ok {
-					log.Printf("Discar event: %+v\n", event)
 					continue
 				}
 			}
@@ -127,9 +146,10 @@ func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg) 
 				break
 			}
 
-			log.Printf("Error while receiving events from Docker server: %s", err)
+			log.Printf("Error while receiving evnts from Docker server: %s", err)
 			errorCount++
-			if errorCount > 10 {
+
+			if errorCount > maxErrors {
 				log.Printf("Maximum errors count. Exit")
 				os.Exit(1)
 			}

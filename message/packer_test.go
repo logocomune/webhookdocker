@@ -9,13 +9,14 @@ import (
 )
 
 func TestPacker_EventPacker(t *testing.T) {
-	l, _ := lru.New(1)
+	size := 1
+	l, _ := lru.New(size)
 	packer := Packer{
 		cache:    l,
 		nodeName: "Test",
 	}
 
-	events := make([]Event, 2, 2)
+	events := make([]Event, 2)
 	events[0] = Event{
 		MetaData: MetaData{
 			Type:   dockerWebhook,
@@ -58,8 +59,7 @@ func TestPacker_EventPacker(t *testing.T) {
 	},
 		eventPacker["abcd"].Container)
 
-	assert.Equal(t,1,len(eventPacker["abcd"].Events))
+	assert.Equal(t, 1, len(eventPacker["abcd"].Events))
 
-	assert.Equal(t,eventPacker["abcd"].Events[0],events[1])
-
+	assert.Equal(t, eventPacker["abcd"].Events[0], events[1])
 }

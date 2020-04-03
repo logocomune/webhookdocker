@@ -42,10 +42,17 @@ type cfgArgs struct {
 	HideNodeName bool `conf:"default:false"`
 	Docker       struct {
 		ShowRunning bool `conf:"default:false"`
-		Listen      struct {
-			ContainerEvents bool `conf:"default:true"`
-			NetworkEvents   bool `conf:"default:true"`
-			VolumeEvents    bool `conf:"default:true"`
+		Filter      struct {
+			ContainerName string `conf:""`
+			ImageName     string `conf:""`
+		}
+		Listen struct {
+			ContainerEvents  bool     `conf:"default:true"`
+			NetworkEvents    bool     `conf:"default:true"`
+			VolumeEvents     bool     `conf:"default:true"`
+			ContainerActions []string `conf:"default:attach;create;destroy;detach;die;kill;oom;pause;rename;restart;start;stop;unpause;update"`
+			NetworkActions   []string `conf:"default:create;connect;destroy;disconnect;remove"`
+			VolumeActions    []string `conf:"default:create;destroy;mount;unmount"`
 		}
 	}
 	Keybase struct {
@@ -163,9 +170,14 @@ func run() error {
 	processor := processor.NewProcessor(ctx, aggregationTime, formatter, wbSender)
 
 	return container.DockerEvents(ctx, processor.Q, container.DockerCfg{
-		ContainerEvents: cfg.Docker.Listen.ContainerEvents,
-		VolumeEvents:    cfg.Docker.Listen.VolumeEvents,
-		NetworkEvents:   cfg.Docker.Listen.ContainerEvents,
-		ShowRunning:     cfg.Docker.ShowRunning,
+		ContainerEvents:  cfg.Docker.Listen.ContainerEvents,
+		VolumeEvents:     cfg.Docker.Listen.VolumeEvents,
+		NetworkEvents:    cfg.Docker.Listen.ContainerEvents,
+		ShowRunning:      cfg.Docker.ShowRunning,
+		ContainerActions: cfg.Docker.Listen.ContainerActions,
+		NetworkActions:   cfg.Docker.Listen.NetworkActions,
+		VolumeActions:    cfg.Docker.Listen.VolumeActions,
+		FilterName:       cfg.Docker.Filter.ContainerName,
+		FilterImage:      cfg.Docker.Filter.ImageName,
 	})
 }
