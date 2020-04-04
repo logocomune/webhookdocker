@@ -30,7 +30,7 @@ Capture docker events and send to Keybase:
 
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:1.1.1 --keybase-endpoint=https://bots.keybase.io/webhookbot/....
+logocomune/webhook-docker:latest --keybase-endpoint=https://bots.keybase.io/webhookbot/....
 ```
 
 
@@ -38,13 +38,13 @@ logocomune/webhook-docker:1.1.1 --keybase-endpoint=https://bots.keybase.io/webho
 Capture docker events and send to Slack:
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:1.1.1 --slack-endpoint=https://hooks.slack.com/services/....
+logocomune/webhook-docker:latest --slack-endpoint=https://hooks.slack.com/services/....
 ```
 
 Capture docker events and send to WebEx:
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:1.1.1 --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
+logocomune/webhook-docker:latest --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
 ```
 
 
@@ -53,6 +53,7 @@ logocomune/webhook-docker:1.1.1 --webex-endpoint=https://api.ciscospark.com/v1/w
 | flag | Environment |type | Default | |
 | --- | --- | --- | --- | --- |
 | --node-name | WD_NODE_NAME |String| | Node name. If empty use the hostname |
+| --hide-node-name | WD_HIDE_NODE_NAME |Boolean| false | Node name is omitted |
 | --docker-show-running | WD_DOCKER_SHOW_RUNNING | Boolean | false | Send running container to webhook |
 | --docker-listen-container-events | WD_DOCKER_LISTEN_CONTAINER_EVENTS | Boolean | true | Listen for container events |
 | --docker-listen-network-events | WD_DOCKER_LISTEN_NETWORK_EVENTS | Boolean | true | Listen for network events | 

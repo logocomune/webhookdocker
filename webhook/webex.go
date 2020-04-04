@@ -19,7 +19,7 @@ type webexMessage struct {
 	Markdown string `json:"markdown"`
 }
 
-//NewKB Initialize Keybase webhook sender
+//NewWebEx Initialize WebEx webhook sender
 func NewWebEx(webHookUlr string, timeOut time.Duration) *WebEx {
 	tr := &http.Transport{
 		DialContext: (&net.Dialer{

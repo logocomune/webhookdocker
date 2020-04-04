@@ -4,17 +4,11 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/ardanlabs/conf"
 	"github.com/logocomune/webhookdocker"
 	"github.com/logocomune/webhookdocker/container"
 	"github.com/pkg/errors"
-)
-
-const (
-	httpClientTimeOut = 3 * time.Second
-	aggregationTime   = 3 * time.Second
 )
 
 var (
@@ -34,9 +28,9 @@ var (
 
 type cfgArgs struct {
 	webhookdocker.CommonCfg
-	webhookdocker.Keybase
-	webhookdocker.Slack
-	webhookdocker.WebEx
+	Keybase webhookdocker.Keybase
+	Slack   webhookdocker.Slack
+	WebEx   webhookdocker.WebEx
 }
 
 func main() {
