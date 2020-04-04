@@ -1,19 +1,14 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/ardanlabs/conf"
+	"github.com/logocomune/webhookdocker"
 	"github.com/logocomune/webhookdocker/container"
-	"github.com/logocomune/webhookdocker/message"
-	"github.com/logocomune/webhookdocker/processor"
-	"github.com/logocomune/webhookdocker/webhook"
 	"github.com/pkg/errors"
 )
 
@@ -38,32 +33,10 @@ var (
 )
 
 type cfgArgs struct {
-	NodeName     string
-	HideNodeName bool `conf:"default:false"`
-	Docker       struct {
-		ShowRunning bool `conf:"default:false"`
-		Filter      struct {
-			ContainerName string `conf:""`
-			ImageName     string `conf:""`
-		}
-		Listen struct {
-			ContainerEvents  bool     `conf:"default:true"`
-			NetworkEvents    bool     `conf:"default:true"`
-			VolumeEvents     bool     `conf:"default:true"`
-			ContainerActions []string `conf:"default:attach;create;destroy;detach;die;kill;oom;pause;rename;restart;start;stop;unpause;update"`
-			NetworkActions   []string `conf:"default:create;connect;destroy;disconnect;remove"`
-			VolumeActions    []string `conf:"default:create;destroy;mount;unmount"`
-		}
-	}
-	Keybase struct {
-		Endpoint string `conf:""`
-	}
-	Slack struct {
-		Endpoint string `conf:""`
-	}
-	WebEx struct {
-		Endpoint string `conf:"flag:webex-endpoint"`
-	}
+	webhookdocker.CommonCfg
+	webhookdocker.Keybase
+	webhookdocker.Slack
+	webhookdocker.WebEx
 }
 
 func main() {
@@ -79,10 +52,6 @@ func main() {
 
 		os.Exit(1)
 	}
-}
-
-type sender interface {
-	Send(events map[string]message.ContainerEventsGroup)
 }
 
 func run() error {
@@ -115,69 +84,5 @@ func run() error {
 
 	defer log.Println("main : Completed")
 
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	shutdown := make(chan os.Signal, 1)
-
-	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
-
-	defer func() {
-		signal.Stop(shutdown)
-		cancel()
-	}()
-
-	go func() {
-		select {
-		case <-shutdown:
-			log.Println("Shutdown request")
-			cancel()
-		case <-ctx.Done():
-		}
-	}()
-
-	nodeName := ""
-	if !cfg.HideNodeName {
-		nodeName = cfg.NodeName
-
-		if nodeName == "" {
-			nodeName, _ = os.Hostname()
-		}
-	}
-
-	formatter, err := message.New(nodeName)
-	if err != nil {
-		log.Fatalln("formatter error", err)
-	}
-
-	var wbSender sender
-
-	if cfg.Keybase.Endpoint != "" {
-		wbSender = webhook.NewKB(cfg.Keybase.Endpoint, httpClientTimeOut)
-	}
-
-	if cfg.Slack.Endpoint != "" {
-		wbSender = webhook.NewSlack(cfg.Slack.Endpoint, httpClientTimeOut)
-	}
-
-	if cfg.WebEx.Endpoint != "" {
-		wbSender = webhook.NewWebEx(cfg.WebEx.Endpoint, httpClientTimeOut)
-	}
-
-	if wbSender == nil {
-		log.Fatalln("No endpoint chosen")
-	}
-
-	processor := processor.NewProcessor(ctx, aggregationTime, formatter, wbSender)
-
-	return container.DockerEvents(ctx, processor.Q, container.DockerCfg{
-		ContainerEvents:  cfg.Docker.Listen.ContainerEvents,
-		VolumeEvents:     cfg.Docker.Listen.VolumeEvents,
-		NetworkEvents:    cfg.Docker.Listen.ContainerEvents,
-		ShowRunning:      cfg.Docker.ShowRunning,
-		ContainerActions: cfg.Docker.Listen.ContainerActions,
-		NetworkActions:   cfg.Docker.Listen.NetworkActions,
-		VolumeActions:    cfg.Docker.Listen.VolumeActions,
-		FilterName:       cfg.Docker.Filter.ContainerName,
-		FilterImage:      cfg.Docker.Filter.ImageName,
-	})
+	return webhookdocker.MainProcess(cfg.CommonCfg, cfg.Keybase, cfg.Slack, cfg.WebEx)
 }

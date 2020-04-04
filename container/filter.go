@@ -60,7 +60,6 @@ func newFilter(cfg DockerCfg) (*filter, error) {
 }
 
 func (f *filter) accept(event events.Message) bool {
-
 	typeEvent := ""
 
 	switch event.Type {

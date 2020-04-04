@@ -8,7 +8,7 @@ var webExLabels = map[int]string{
 	groupFooter: `__NEW_LINE__🆔 __ID__`,
 
 	containerDefault: `>📦 **__ACTION__** Container   __NEW_LINE__  `,
-	containerDie:     `>📦 **__ACTION__** Container   __NEW_LINE__   >>❗ Exit code: **__EXIT_CODE__**   __NEW_LINE__   ` ,
+	containerDie:     `>📦 **__ACTION__** Container   __NEW_LINE__   >>❗ Exit code: **__EXIT_CODE__**   __NEW_LINE__   `,
 	containerKill:    `>📦 **__ACTION__** Container   __NEW_LINE__   >>📣 Signal: **__SIGNAL__**    __NEW_LINE__   `,
 
 	volumeMount:   `>🛢️ **__ACTION__** Volume   __NEW_LINE__>>  Mount point: __VOLUME_DESTINATION__    __NEW_LINE__ `,

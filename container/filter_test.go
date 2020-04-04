@@ -9,7 +9,6 @@ import (
 )
 
 func Test_newFilter(t *testing.T) {
-
 	cfg := DockerCfg{
 		ContainerEvents:  false,
 		VolumeEvents:     false,

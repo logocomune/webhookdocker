@@ -30,7 +30,7 @@ Capture docker events and send to Keybase:
 
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:1.1.0 --keybase-endpoint=https://bots.keybase.io/webhookbot/....
+logocomune/webhook-docker:1.1.1 --keybase-endpoint=https://bots.keybase.io/webhookbot/....
 ```
 
 
@@ -38,13 +38,13 @@ logocomune/webhook-docker:1.1.0 --keybase-endpoint=https://bots.keybase.io/webho
 Capture docker events and send to Slack:
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:1.1.0 --slack-endpoint=https://hooks.slack.com/services/....
+logocomune/webhook-docker:1.1.1 --slack-endpoint=https://hooks.slack.com/services/....
 ```
 
 Capture docker events and send to WebEx:
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:1.1.0 --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
+logocomune/webhook-docker:1.1.1 --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
 ```
 
 
