@@ -72,15 +72,17 @@ func MainProcess(cfg CommonCfg, kb Keybase, sl Slack, ex WebEx) error {
 	processor := processor.NewProcessor(ctx, aggregationTime, formatter, wbSender)
 
 	return container.DockerEvents(ctx, processor.Q, container.DockerCfg{
-		ContainerEvents:  cfg.Docker.Listen.ContainerEvents,
-		VolumeEvents:     cfg.Docker.Listen.VolumeEvents,
-		NetworkEvents:    cfg.Docker.Listen.ContainerEvents,
-		ShowRunning:      cfg.Docker.ShowRunning,
-		ContainerActions: cfg.Docker.Listen.ContainerActions,
-		NetworkActions:   cfg.Docker.Listen.NetworkActions,
-		VolumeActions:    cfg.Docker.Listen.VolumeActions,
-		FilterName:       cfg.Docker.Filter.ContainerName,
-		FilterImage:      cfg.Docker.Filter.ImageName,
+		ContainerEvents:   cfg.Docker.Listen.ContainerEvents,
+		VolumeEvents:      cfg.Docker.Listen.VolumeEvents,
+		NetworkEvents:     cfg.Docker.Listen.ContainerEvents,
+		ShowRunning:       cfg.Docker.ShowRunning,
+		ContainerActions:  cfg.Docker.Listen.ContainerActions,
+		NetworkActions:    cfg.Docker.Listen.NetworkActions,
+		VolumeActions:     cfg.Docker.Listen.VolumeActions,
+		FilterName:        cfg.Docker.Filter.ContainerName,
+		NegateFilterName:  cfg.Docker.Filter.NegateContainerName,
+		FilterImage:       cfg.Docker.Filter.ImageName,
+		NegateFilterImage: cfg.Docker.Filter.NegateImageName,
 	})
 }
 

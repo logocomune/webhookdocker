@@ -61,9 +61,35 @@ logocomune/webhook-docker:latest --webex-endpoint=https://api.ciscospark.com/v1/
 | --docker-listen-container-actions | WD_DOCKER_LISTEN_CONTAINER_ACTIONS| Strings separated by ; | attach;create;destroy;detach;die;kill;oom;pause;rename;restart;start;stop;unpause;update | Docker container events  |
 | --docker-listen-network-actions | WD_DOCKER_LISTEN_NETWORK_ACTIONS | Strings separated by ; | create;connect;destroy;disconnect;remove | Docker network events |
 | --docker-listen-volume-actions | WD_DOCKER_LISTEN_VOLUME_ACTIONS |  Strings separated by ; |  create;destroy;mount;unmount | Docker volume events |
-| --docker-filter-container-name | WD_DOCKER_FILTER_CONTAINER_NAME | Regexp | |Filter events by container name (default all) | 
+| --docker-filter-container-name | WD_DOCKER_FILTER_CONTAINER_NAME | Regexp | |Filter events by container name (default all) |
+| --docker-filter-negate-container-name | WD_DOCKER_FILTER_NEGATE_CONTAINER_NAME | Boolean | false | Negate the filter of container name |
 | --docker-filter-image-name | WD_DOCKER_FILTER_IMAGE_NAME | Regexp | |Filter events by image name (default all) | 
+| --docker-filter-negate-image-name | WD_DOCKER_FILTER_NEGATE_IMAGE_NAME | Boolean | false | Negate the filter of image name |
 | --keybase-endpoint | WD_KEYBASE_ENDPOINT | String | |  Keybase endpoint for webhook | 
 | --slack-endpoint | WD_SLACK_ENDPOINT | String | | Slack endpoint for webhook |
 | --webex-endpoint | WD_WEBEX_ENDPOINT | String | | WebEx endpoint for webhook |
+
+#### Regexp Filters
+
+Capture events of container with names with the following formats:
++ exec-1234
++ exec-abcd-12345
+
+```shell
+$ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
+--docker-filter-container-name="^exec-.*$" \
+logocomune/webhook-docker:latest --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
+```
+
+*Exclude* events of container with the following formats:
++ exec-1234
++ exec-abcd-12345
+
+```shell
+$ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
+--docker-filter-container-name="^exec-.*$" \
+--docker-filter-negate-container-name \
+logocomune/webhook-docker:latest --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
+```
+
 

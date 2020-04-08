@@ -59,9 +59,11 @@ func Test_newFilterBadRegExp(t *testing.T) {
 
 func Test_filter_accept(t *testing.T) {
 	type fields struct {
-		actions       map[string]struct{}
-		imageName     *regexp.Regexp
-		containerName *regexp.Regexp
+		actions             map[string]struct{}
+		imageName           *regexp.Regexp
+		containerName       *regexp.Regexp
+		invertContainerName bool
+		invertImageName     bool
 	}
 
 	type args struct {
@@ -224,14 +226,53 @@ func Test_filter_accept(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "Filter by name",
+			fields: fields{
+				actions:       map[string]struct{}{"container_exec_start": {}},
+				imageName:     nil,
+				containerName: regexp.MustCompile(`^exec-.*$`),
+			},
+			args: args{event: events.Message{
+
+				Type:   "container",
+				Action: "exec_start: bash",
+				Actor: events.Actor{
+					Attributes: map[string]string{"name": "exec-1234"},
+				},
+			},
+			},
+			want: true,
+		},
+		{
+			name: "Filter by name inversion",
+			fields: fields{
+				actions:             map[string]struct{}{"container_exec_start": {}},
+				imageName:           nil,
+				containerName:       regexp.MustCompile(`^exec-.*$`),
+				invertContainerName: true,
+			},
+			args: args{event: events.Message{
+
+				Type:   "container",
+				Action: "exec_start: bash",
+				Actor: events.Actor{
+					Attributes: map[string]string{"name": "exec-1234"},
+				},
+			},
+			},
+			want: false,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := &filter{
-				actions:       tt.fields.actions,
-				imageName:     tt.fields.imageName,
-				containerName: tt.fields.containerName,
+				actions:             tt.fields.actions,
+				imageName:           tt.fields.imageName,
+				containerName:       tt.fields.containerName,
+				invertImageName:     tt.fields.invertImageName,
+				invertContainerName: tt.fields.invertContainerName,
 			}
 			if got := f.accept(tt.args.event); got != tt.want {
 				t.Errorf("accept() = %v, want %v", got, tt.want)

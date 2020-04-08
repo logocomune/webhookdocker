@@ -32,10 +32,8 @@ func (p *Packer) EventPacker(events []Event) map[string]ContainerEventsGroup {
 	aggrMsgs := make(map[string]ContainerEventsGroup)
 
 	for _, e := range events {
-		id := e.Container.ID
-
 		if e.MetaData.Type == dockerWebhook {
-			id = dockerWebhook
+			id := dockerWebhook
 			aggrMsgs[id] = ContainerEventsGroup{
 				Group: Group{
 					NodeName: p.nodeName,
@@ -45,6 +43,8 @@ func (p *Packer) EventPacker(events []Event) map[string]ContainerEventsGroup {
 
 			continue
 		}
+
+		id := e.Container.ID
 
 		eventsGroup := aggrMsgs[id]
 		eventsGroup.Events = append(eventsGroup.Events, e)
@@ -63,6 +63,12 @@ func (p *Packer) EventPacker(events []Event) map[string]ContainerEventsGroup {
 
 		eventsGroup.NodeName = p.nodeName
 		aggrMsgs[id] = eventsGroup
+	}
+
+	for k := range aggrMsgs {
+		if k != dockerWebhook && aggrMsgs[k].ID == "" {
+			delete(aggrMsgs, k)
+		}
 	}
 
 	return aggrMsgs

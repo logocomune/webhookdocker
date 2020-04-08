@@ -8,9 +8,11 @@ import (
 )
 
 type filter struct {
-	actions       map[string]struct{}
-	imageName     *regexp.Regexp
-	containerName *regexp.Regexp
+	actions             map[string]struct{}
+	imageName           *regexp.Regexp
+	containerName       *regexp.Regexp
+	invertImageName     bool
+	invertContainerName bool
 }
 
 const (
@@ -53,9 +55,11 @@ func newFilter(cfg DockerCfg) (*filter, error) {
 	}
 
 	return &filter{
-		actions:       actions,
-		imageName:     imageName,
-		containerName: containerName,
+		actions:             actions,
+		imageName:           imageName,
+		containerName:       containerName,
+		invertContainerName: cfg.NegateFilterName,
+		invertImageName:     cfg.NegateFilterImage,
 	}, nil
 }
 
@@ -65,15 +69,19 @@ func (f *filter) accept(event events.Message) bool {
 	switch event.Type {
 	case events.ContainerEventType:
 		if f.containerName != nil {
-			containerName := event.Actor.Attributes["name"]
-			if !f.containerName.MatchString(containerName) {
+			cN := event.Actor.Attributes["name"]
+			match := f.containerName.MatchString(cN)
+
+			if match == f.invertContainerName {
 				return false
 			}
 		}
 
 		if f.imageName != nil {
-			imageName := event.Actor.Attributes["image"]
-			if !f.imageName.MatchString(imageName) {
+			iN := event.Actor.Attributes["image"]
+			match := f.imageName.MatchString(iN)
+
+			if match == f.invertImageName {
 				return false
 			}
 		}

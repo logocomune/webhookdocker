@@ -16,15 +16,17 @@ import (
 )
 
 type DockerCfg struct {
-	ContainerEvents  bool
-	VolumeEvents     bool
-	NetworkEvents    bool
-	ShowRunning      bool
-	ContainerActions []string
-	NetworkActions   []string
-	VolumeActions    []string
-	FilterName       string
-	FilterImage      string
+	ContainerEvents   bool
+	VolumeEvents      bool
+	NetworkEvents     bool
+	ShowRunning       bool
+	ContainerActions  []string
+	NetworkActions    []string
+	VolumeActions     []string
+	FilterName        string
+	NegateFilterName  bool
+	FilterImage       string
+	NegateFilterImage bool
 }
 
 const maxErrors = 10

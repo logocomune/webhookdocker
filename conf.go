@@ -6,8 +6,10 @@ type CommonCfg struct {
 	Docker       struct {
 		ShowRunning bool `conf:"default:false"`
 		Filter      struct {
-			ContainerName string `conf:""`
-			ImageName     string `conf:""`
+			ContainerName       string `conf:""`
+			NegateContainerName bool   `conf:"default:false"`
+			ImageName           string `conf:""`
+			NegateImageName     bool   `conf:"default:false"`
 		}
 		Listen struct {
 			ContainerEvents  bool     `conf:"default:true"`
