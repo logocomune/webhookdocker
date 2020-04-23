@@ -62,6 +62,7 @@ func (f formatter) titleMessage(name string, image string, nodeName string, t ti
 	}
 
 	msg = strings.Replace(msg, "__NODE_NAME__", hostnameReplacer, -1)
+	msg = strings.Replace(msg, "__NODE_NAME_W_SPACES__", strings.Replace(hostnameReplacer, "*@*_", " *@* _", 1), -1)
 
 	return msg
 }
