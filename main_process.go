@@ -23,7 +23,7 @@ type sender interface {
 	Send(events map[string]message.ContainerEventsGroup)
 }
 
-func MainProcess(cfg CommonCfg, kb Keybase, sl Slack, ex WebEx) error {
+func MainProcess(cfg CommonCfg, kb Keybase, sl Slack, ex WebEx, appVersion, builtDate string) error {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	shutdown := make(chan os.Signal, 1)
@@ -54,15 +54,15 @@ func MainProcess(cfg CommonCfg, kb Keybase, sl Slack, ex WebEx) error {
 	var wbSender sender
 
 	if kb.Endpoint != "" {
-		wbSender = webhook.NewKB(kb.Endpoint, httpClientTimeOut)
+		wbSender = webhook.NewKB(kb.Endpoint, httpClientTimeOut, cfg.Docker.ExternalInstanceInspection)
 	}
 
 	if sl.Endpoint != "" {
-		wbSender = webhook.NewSlack(sl.Endpoint, httpClientTimeOut)
+		wbSender = webhook.NewSlack(sl.Endpoint, httpClientTimeOut, cfg.Docker.ExternalInstanceInspection)
 	}
 
 	if ex.Endpoint != "" {
-		wbSender = webhook.NewWebEx(ex.Endpoint, httpClientTimeOut)
+		wbSender = webhook.NewWebEx(ex.Endpoint, httpClientTimeOut, cfg.Docker.ExternalInstanceInspection)
 	}
 
 	if wbSender == nil {
@@ -83,7 +83,7 @@ func MainProcess(cfg CommonCfg, kb Keybase, sl Slack, ex WebEx) error {
 		NegateFilterName:  cfg.Docker.Filter.NegateContainerName,
 		FilterImage:       cfg.Docker.Filter.ImageName,
 		NegateFilterImage: cfg.Docker.Filter.NegateImageName,
-	})
+	}, appVersion, builtDate)
 }
 
 func getNodeName(cfg CommonCfg) string {

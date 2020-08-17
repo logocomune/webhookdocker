@@ -29,7 +29,7 @@ type slackText struct {
 	Text string `json:"text"`
 }
 
-func NewSlack(webHookUlr string, timeOut time.Duration) *Slack {
+func NewSlack(webHookUlr string, timeOut time.Duration, externalInspectUrl string) *Slack {
 	tr := &http.Transport{
 		DialContext: (&net.Dialer{
 			Timeout: timeOut,
@@ -42,7 +42,10 @@ func NewSlack(webHookUlr string, timeOut time.Duration) *Slack {
 			Transport: tr,
 			Timeout:   timeOut,
 		},
-		formatter: formatter{slackLabels},
+		formatter: formatter{
+			labels:             slackLabels,
+			externalInspectUrl: externalInspectUrl,
+		},
 	}
 }
 

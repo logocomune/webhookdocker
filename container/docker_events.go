@@ -36,7 +36,7 @@ type ContextDoneError struct {
 
 func (c *ContextDoneError) Error() string { return "DockerEvents: Context done. Exit" }
 
-func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg) error {
+func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg, appVersion, appBuiltDate string) error {
 	eventFilter, err := newFilter(cfg)
 	if err != nil {
 		return err
@@ -73,6 +73,8 @@ func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg) 
 			Os:            v.Os,
 			KernelVersion: v.KernelVersion,
 			APIVersion:    v.APIVersion,
+			AppVersion:    appVersion,
+			AppBuiltDate:  appBuiltDate,
 		},
 	}
 

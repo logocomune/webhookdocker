@@ -1,4 +1,8 @@
 # Webhook Docker
+![Docker Pulls](https://img.shields.io/docker/pulls/logocomune/webhook-docker)
+[![](https://images.microbadger.com/badges/version/logocomune/webhook-docker:1.3.0.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.3.0 "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/logocomune/webhook-docker:1.3.0.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.3.0 "Get your own image badge on microbadger.com")
+
 
 A [Keybase](https://keybase.io), [Slack](https://slack.com) and [WebEx](https://www.webex.com/) integration to notify Docker Events via incoming webhook
 
@@ -30,7 +34,7 @@ Capture docker events and send to Keybase:
 
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:latest --keybase-endpoint=https://bots.keybase.io/webhookbot/....
+logocomune/webhook-docker:v1.3.0 --keybase-endpoint=https://bots.keybase.io/webhookbot/....
 ```
 
 
@@ -38,13 +42,13 @@ logocomune/webhook-docker:latest --keybase-endpoint=https://bots.keybase.io/webh
 Capture docker events and send to Slack:
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:latest --slack-endpoint=https://hooks.slack.com/services/....
+logocomune/webhook-docker:v1.3.0 --slack-endpoint=https://hooks.slack.com/services/....
 ```
 
 Capture docker events and send to WebEx:
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:latest --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
+logocomune/webhook-docker:v1.3.0 --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
 ```
 
 
@@ -54,6 +58,7 @@ logocomune/webhook-docker:latest --webex-endpoint=https://api.ciscospark.com/v1/
 | --- | --- | --- | --- | --- |
 | --node-name | WD_NODE_NAME |String| | Node name. If empty use the hostname |
 | --hide-node-name | WD_HIDE_NODE_NAME |Boolean| false | Node name is omitted |
+| --docker-external-instance-inspection | WD_DOCKER_EXTERNAL_INSTANCE_INSPECTION  | String | Add an external inspection url. Eg: https://myhost.ext/inspection/#/containers/__ID__|
 | --docker-show-running | WD_DOCKER_SHOW_RUNNING | Boolean | false | Send running container to webhook |
 | --docker-listen-container-events | WD_DOCKER_LISTEN_CONTAINER_EVENTS | Boolean | true | Listen for container events |
 | --docker-listen-network-events | WD_DOCKER_LISTEN_NETWORK_EVENTS | Boolean | true | Listen for network events | 

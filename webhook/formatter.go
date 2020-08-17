@@ -8,20 +8,29 @@ import (
 )
 
 const (
-	startupTitle1 = iota
+	appTitle = iota
+	startupTitle1
 	startupTitle2
 	groupTitle
 	groupFooter
+	groupFooterWithInspect
 	containerDefault
+	containerExit0
 	containerDie
 	containerKill
 	volumeMount
 	volumeUnmount
 	networkDefault
+
+	idMaxSize = 12
+
+	githubUrl    = "https://github.com/logocomune/webhookdocker/issues"
+	dockerHubUrl = "https://hub.docker.com/r/logocomune/webhook-docker"
 )
 
 type formatter struct {
-	labels map[int]string
+	labels             map[int]string
+	externalInspectUrl string
 }
 
 func (f formatter) startupMessage(nodeName string, info message.StartupInfo) string {
@@ -29,7 +38,13 @@ func (f formatter) startupMessage(nodeName string, info message.StartupInfo) str
 		return ""
 	}
 
-	msg := f.labels[startupTitle1] + f.labels[startupTitle2]
+	msg := f.labels[appTitle] + f.labels[startupTitle1] + f.labels[startupTitle2]
+
+	msg = strings.Replace(msg, "__APP_VERSION__", info.AppVersion, -1)
+	msg = strings.Replace(msg, "__APP_BUILT_DATE__", info.AppBuiltDate, -1)
+
+	msg = strings.Replace(msg, "__GITHUB_URL__", githubUrl, -1)
+	msg = strings.Replace(msg, "__DOCKER_HUB_URL__", dockerHubUrl, -1)
 
 	msg = strings.Replace(msg, "__DOCKER_VERSION__", info.DockerVersion, -1)
 	msg = strings.Replace(msg, "__DOCKER_API_VERSION__", info.APIVersion, -1)
@@ -69,10 +84,31 @@ func (f formatter) titleMessage(name string, image string, nodeName string, t ti
 
 func (f formatter) footerMessage(id string) string {
 	msg := f.labels[groupFooter]
+	var inspectUrl string
+	if f.externalInspectUrl != "" {
+		msg = f.labels[groupFooterWithInspect]
+		inspectUrl = buildInspectUrl(f.externalInspectUrl, id)
+	}
+
+	id = shortId(id)
 	msg = strings.Replace(msg, "__ID__", id, -1)
 	msg = strings.Replace(msg, "__NEW_LINE__", "\n", -1)
+	msg = strings.Replace(msg, "__INSPECT_URL__", inspectUrl, -1)
 
 	return msg
+}
+
+func buildInspectUrl(url string, id string) string {
+	url = strings.Replace(url, "__ID__", id, -1)
+	url = strings.Replace(url, "__SHORT_ID__", shortId(id), -1)
+	return url
+}
+
+func shortId(id string) string {
+	if len(id) <= idMaxSize {
+		return id
+	}
+	return id[:idMaxSize]
 }
 
 func (f formatter) containerMessage(meta message.MetaData, eContainer message.Container, eStatus message.ContainerStatus) string {
@@ -84,6 +120,10 @@ func (f formatter) containerMessage(meta message.MetaData, eContainer message.Co
 
 	case "die":
 		msg = f.labels[containerDie]
+		if eStatus.ExitCode == "0" {
+			msg = f.labels[containerExit0]
+		}
+
 	default:
 		msg = f.labels[containerDefault]
 	}

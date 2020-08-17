@@ -11,7 +11,7 @@ BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 DATE    ?= $(shell date +%FT%T%z)
 
 # Setup the -ldflags option for go build here, interpolate the variable values
-LDFLAGS = -ldflags '-w -s -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.branch=${BRANCH} -X main.buildDate=${DATE} -X main.shortVersion=${SHORT_VERSION} -X main.build="production"'
+LDFLAGS = -ldflags '-w -s -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.branch=${BRANCH} -X main.buildDate=${DATE} -X main.shortVersion=${SHORT_VERSION} -X container.buildDate=${DATE} -X container.shortVersion=${SHORT_VERSION}  -X main.build="production"'
 
 
 .PHONY: build

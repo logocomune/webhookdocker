@@ -4,8 +4,9 @@ type CommonCfg struct {
 	NodeName     string
 	HideNodeName bool `conf:"default:false"`
 	Docker       struct {
-		ShowRunning bool `conf:"default:false"`
-		Filter      struct {
+		ExternalInstanceInspection string `conf:""`
+		ShowRunning                bool   `conf:"default:false"`
+		Filter                     struct {
 			ContainerName       string `conf:""`
 			NegateContainerName bool   `conf:"default:false"`
 			ImageName           string `conf:""`

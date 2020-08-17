@@ -45,6 +45,8 @@ type StartupInfo struct {
 	APIVersion    string
 	Os            string
 	KernelVersion string
+	AppVersion    string
+	AppBuiltDate  string
 }
 
 type Container struct {

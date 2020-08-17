@@ -52,6 +52,7 @@ func run() error {
 	var cfg cfgArgs
 
 	log.Printf("main : Started : Application initializing : version %s (Built: %s)", shortVersion, buildDate)
+	log.Println("Repository: https://github.com/logocomune/webhookdocker")
 	log.Println(os.Args[0], "-h", "for help")
 
 	if err := conf.Parse(os.Args[1:], "WD", &cfg); err != nil {
@@ -78,5 +79,5 @@ func run() error {
 
 	defer log.Println("main : Completed")
 
-	return webhookdocker.MainProcess(cfg.CommonCfg, cfg.Keybase, cfg.Slack, cfg.WebEx)
+	return webhookdocker.MainProcess(cfg.CommonCfg, cfg.Keybase, cfg.Slack, cfg.WebEx, shortVersion, buildDate)
 }

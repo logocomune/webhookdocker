@@ -20,7 +20,7 @@ type webexMessage struct {
 }
 
 //NewWebEx Initialize WebEx webhook sender
-func NewWebEx(webHookUlr string, timeOut time.Duration) *WebEx {
+func NewWebEx(webHookUlr string, timeOut time.Duration, externalInspectUrl string) *WebEx {
 	tr := &http.Transport{
 		DialContext: (&net.Dialer{
 			Timeout: timeOut,
@@ -33,7 +33,8 @@ func NewWebEx(webHookUlr string, timeOut time.Duration) *WebEx {
 			Transport: tr,
 			Timeout:   timeOut,
 		},
-		formatter: formatter{webExLabels},
+		formatter: formatter{labels: webExLabels,
+			externalInspectUrl: externalInspectUrl},
 	}
 }
 

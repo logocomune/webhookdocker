@@ -18,7 +18,7 @@ type KB struct {
 }
 
 //NewKB Initialize Keybase webhook sender
-func NewKB(webHookUlr string, timeOut time.Duration) *KB {
+func NewKB(webHookUlr string, timeOut time.Duration, externalInspectUrl string) *KB {
 	tr := &http.Transport{
 		DialContext: (&net.Dialer{
 			Timeout: timeOut,
@@ -31,7 +31,9 @@ func NewKB(webHookUlr string, timeOut time.Duration) *KB {
 			Transport: tr,
 			Timeout:   timeOut,
 		},
-		formatter: formatter{keybaseLabels},
+		formatter: formatter{
+			labels:             keybaseLabels,
+			externalInspectUrl: externalInspectUrl},
 	}
 }
 
