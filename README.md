@@ -2,7 +2,7 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/logocomune/webhook-docker)
 [![](https://images.microbadger.com/badges/version/logocomune/webhook-docker:1.3.0.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.3.0 "Get your own version badge on microbadger.com")
 [![](https://images.microbadger.com/badges/image/logocomune/webhook-docker:1.3.0.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.3.0 "Get your own image badge on microbadger.com")
-
+[![Go Report Card](https://goreportcard.com/badge/github.com/logocomune/webhookdocker)](https://goreportcard.com/report/github.com/logocomune/webhookdocker)
 
 A [Keybase](https://keybase.io), [Slack](https://slack.com) and [WebEx](https://www.webex.com/) integration to notify Docker Events via incoming webhook
 

@@ -95,5 +95,6 @@ func getNodeName(cfg CommonCfg) string {
 			nodeName, _ = os.Hostname()
 		}
 	}
+
 	return nodeName
 }

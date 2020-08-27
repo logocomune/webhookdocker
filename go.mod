@@ -1,6 +1,6 @@
 module github.com/logocomune/webhookdocker
 
-go 1.14
+go 1.15
 
 require (
 	docker.io/go-docker v1.0.0
