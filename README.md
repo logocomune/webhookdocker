@@ -1,7 +1,7 @@
 # Webhook Docker
 ![Docker Pulls](https://img.shields.io/docker/pulls/logocomune/webhook-docker)
-[![](https://images.microbadger.com/badges/version/logocomune/webhook-docker:1.3.0.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.3.0 "Get your own version badge on microbadger.com")
-[![](https://images.microbadger.com/badges/image/logocomune/webhook-docker:1.3.0.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.3.0 "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/logocomune/webhook-docker:1.3.1.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.3.1 "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/logocomune/webhook-docker:1.3.1.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.3.1 "Get your own image badge on microbadger.com")
 [![Go Report Card](https://goreportcard.com/badge/github.com/logocomune/webhookdocker)](https://goreportcard.com/report/github.com/logocomune/webhookdocker)
 
 A [Keybase](https://keybase.io), [Slack](https://slack.com) and [WebEx](https://www.webex.com/) integration to notify Docker Events via incoming webhook
@@ -34,7 +34,7 @@ Capture docker events and send to Keybase:
 
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:v1.3.0 --keybase-endpoint=https://bots.keybase.io/webhookbot/....
+logocomune/webhook-docker:v1.3.1 --keybase-endpoint=https://bots.keybase.io/webhookbot/....
 ```
 
 
@@ -42,13 +42,13 @@ logocomune/webhook-docker:v1.3.0 --keybase-endpoint=https://bots.keybase.io/webh
 Capture docker events and send to Slack:
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:v1.3.0 --slack-endpoint=https://hooks.slack.com/services/....
+logocomune/webhook-docker:v1.3.1 --slack-endpoint=https://hooks.slack.com/services/....
 ```
 
 Capture docker events and send to WebEx:
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:v1.3.0 --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
+logocomune/webhook-docker:v1.3.1 --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
 ```
 
 
