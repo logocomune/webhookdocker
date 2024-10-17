@@ -14,7 +14,7 @@ VERSION=$( git describe --tags --always --dirty --match=* 2> /dev/null || echo "
 SHORT_VERSION=$(git describe --tags --always --dirty --match=* | cut -d'-' -f1 2> /dev/null || echo "v0.0.0")
 COMMIT=$(git rev-parse HEAD)
 DATE=$( date +%FT%T%z)
-LDFLAGS="-w -s -X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH} -X main.BUILD_DATE=${DATE} -X main.SHORT_VERSION=${SHORT_VERSION}"
+LDFLAGS="-w -s -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.branch=${BRANCH} -X main.buildDate=${DATE} -X main.shortVersion=${SHORT_VERSION}"
 
 
 
