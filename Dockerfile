@@ -1,32 +1,28 @@
-FROM golang:1.14-alpine AS build_base
+FROM golang:1.23.2-alpine3.20 AS builder
 
-RUN apk add --no-cache git curl make binutils
+RUN apk add --no-cache git curl build-base  bash
+
 
 RUN mkdir -p /app
 
 WORKDIR /app
 
-ENV GOPROXY="https://proxy.golang.org,direct"
-
-COPY go.* ./
-
-RUN go mod download
-
-
-FROM build_base as builder
+WORKDIR /app
 
 COPY . .
 
-RUN make docker_install
-
-RUN strip /go/bin/webhook-docker
+RUN ./build.sh webhook-docker
 
 
-FROM alpine
+
+
+
+FROM alpine:3.20
 
 WORKDIR /
 
-COPY --from=builder /go/bin/webhook-docker /webhook-docker
+COPY --from=builder /app/webhook-docker /application
 
-ENTRYPOINT ["./webhook-docker"]
+
+ENTRYPOINT ["./application"]
 
