@@ -180,7 +180,7 @@ func parseEvent(event events.Message) message.Event {
 		e.Container.Image = event.Actor.Attributes["image"]
 		e.ContainerStatus.Signal = event.Actor.Attributes["signal"]
 		e.ContainerStatus.ExitCode = event.Actor.Attributes["exitCode"]
-		e.Container.ID = event.ID
+		e.Container.ID = event.Actor.ID
 
 	case "volume":
 		e.Volume.Destination = event.Actor.Attributes["destination"]
