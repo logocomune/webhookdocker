@@ -1,10 +1,10 @@
 # Webhook Docker
 ![Docker Pulls](https://img.shields.io/docker/pulls/logocomune/webhook-docker)
-[![](https://images.microbadger.com/badges/version/logocomune/webhook-docker:1.3.1.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.3.1 "Get your own version badge on microbadger.com")
-[![](https://images.microbadger.com/badges/image/logocomune/webhook-docker:1.3.1.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.3.1 "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/logocomune/webhook-docker:1.4.0.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.4.0 "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/logocomune/webhook-docker:1.4.0.svg)](https://microbadger.com/images/logocomune/webhook-docker:1.4.0 "Get your own image badge on microbadger.com")
 [![Go Report Card](https://goreportcard.com/badge/github.com/logocomune/webhookdocker)](https://goreportcard.com/report/github.com/logocomune/webhookdocker)
 
-A [Keybase](https://keybase.io), [Slack](https://slack.com) and [WebEx](https://www.webex.com/) integration to notify Docker Events via incoming webhook
+A [Keybase](https://keybase.io), [Slack](https://slack.com), [WebEx](https://www.webex.com/) and [Google Chat](https://chat.google.com/) integration to notify Docker Events via incoming webhook
 
 ## Keybase webhook setup
 
@@ -28,13 +28,18 @@ A [Keybase](https://keybase.io), [Slack](https://slack.com) and [WebEx](https://
 ![Docker events on WebEx](https://raw.githubusercontent.com/logocomune/webhookdocker/master/_img/webex.png)
 
 
+## Google Chat webhook setup
+
++ Set up [Incoming Webhooks](https://developers.google.com/chat/how-tos/webhooks) for your Google Chat space
+
+
 ## Run
 
 Capture docker events and send to Keybase:
 
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:v1.3.1 --keybase-endpoint=https://bots.keybase.io/webhookbot/....
+logocomune/webhook-docker:v1.4.0 --keybase-endpoint=https://bots.keybase.io/webhookbot/....
 ```
 
 
@@ -42,13 +47,19 @@ logocomune/webhook-docker:v1.3.1 --keybase-endpoint=https://bots.keybase.io/webh
 Capture docker events and send to Slack:
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:v1.3.1 --slack-endpoint=https://hooks.slack.com/services/....
+logocomune/webhook-docker:v1.4.0 --slack-endpoint=https://hooks.slack.com/services/....
 ```
 
 Capture docker events and send to WebEx:
 ```shell
 $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
-logocomune/webhook-docker:v1.3.1 --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
+logocomune/webhook-docker:v1.4.0 --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
+```
+
+Capture docker events and send to Google Chat:
+```shell
+$ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
+logocomune/webhook-docker:v1.4.0 --google-chat-endpoint=https://chat.googleapis.com/v1/spaces/....
 ```
 
 
@@ -73,6 +84,7 @@ logocomune/webhook-docker:v1.3.1 --webex-endpoint=https://api.ciscospark.com/v1/
 | --keybase-endpoint | WD_KEYBASE_ENDPOINT | String | |  Keybase endpoint for webhook | 
 | --slack-endpoint | WD_SLACK_ENDPOINT | String | | Slack endpoint for webhook |
 | --webex-endpoint | WD_WEBEX_ENDPOINT | String | | WebEx endpoint for webhook |
+| --google-chat-endpoint | WD_GOOGLE_CHAT_ENDPOINT | String | | Google Chat endpoint for webhook |
 
 #### Regexp Filters
 
@@ -96,5 +108,3 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock:ro \
 --docker-filter-negate-container-name \
 logocomune/webhook-docker:latest --webex-endpoint=https://api.ciscospark.com/v1/webhooks/incoming/....
 ```
-
-
