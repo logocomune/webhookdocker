@@ -8,10 +8,11 @@ import (
 	"strings"
 	"time"
 
-	"docker.io/go-docker"
-	"docker.io/go-docker/api/types"
-	"docker.io/go-docker/api/types/events"
-	"docker.io/go-docker/api/types/filters"
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/events"
+	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/client"
 	"github.com/logocomune/webhookdocker/message"
 )
 
@@ -42,13 +43,14 @@ func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg, 
 		return err
 	}
 
-	cli, err := docker.NewEnvClient()
+	//cli, err := docker.NewEnvClient()
+	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 
 	if err != nil {
 		return err
 	}
 
-	containers, err := cli.ContainerList(ctx, types.ContainerListOptions{})
+	containers, err := cli.ContainerList(ctx, container.ListOptions{All: true})
 
 	if err != nil {
 		return err
@@ -107,24 +109,24 @@ func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg, 
 		log.Printf("Running %s %s\n", container.ID[:10], container.Image)
 	}
 
-	filters := filters.NewArgs()
+	filterItems := filters.NewArgs()
 
 	if cfg.ContainerEvents {
-		filters.Add("type", events.ContainerEventType)
+		filterItems.Add("type", string(events.ContainerEventType))
 	}
 
 	if cfg.VolumeEvents {
-		filters.Add("type", events.VolumeEventType)
+		filterItems.Add("type", string(events.VolumeEventType))
 	}
 
 	if cfg.NetworkEvents {
-		filters.Add("type", events.NetworkEventType)
+		filterItems.Add("type", string(events.NetworkEventType))
 	}
 
-	evnts, cliErrors := cli.Events(ctx, types.EventsOptions{
+	evnts, cliErrors := cli.Events(ctx, events.ListOptions{
 		Since:   "",
 		Until:   "",
-		Filters: filters,
+		Filters: filterItems,
 	})
 
 	errorCount := 0
@@ -166,8 +168,8 @@ func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg, 
 func parseEvent(event events.Message) message.Event {
 	e := message.Event{
 		MetaData: message.MetaData{
-			Type:   event.Type,
-			Action: event.Action,
+			Type:   string(event.Type),
+			Action: string(event.Action),
 			Time:   time.Unix(event.Time, 0),
 		},
 	}

@@ -2,8 +2,8 @@ package webhook
 
 var googleChatLabel = map[int]string{
 	appTitle:      `❤️ Webhook Docker __APP_VERSION__ (Built: __APP_BUILT_DATE__)    __NEW_LINE__🗂️ ` + "`__GITHUB_URL__ ` " + `    __NEW_LINE__🚢 __DOCKER_HUB_URL__    __NEW_LINE__`,
-	startupTitle1: `🐳 Docker Version: *__DOCKER_VERSION__* __TAB__ApiVersion: __DOCKER_API_VERSION__ Node: ` + "`__NODE_NAME__`  __NEW_LINE____NEW_LINE__",
-	startupTitle2: `__NEW_LINE__🛠️ Os: __OS__  __TAB__Kernel: __KERNEL_VERSION__`,
+	startupTitle1: `🐳 Docker Version: *__DOCKER_VERSION__* __TAB__ApiVersion: __DOCKER_API_VERSION__  __NEW_LINE__Node: ` + "`__NODE_NAME__` __NEW_LINE__",
+	startupTitle2: `🛠️ Os: __OS__  __TAB__Kernel: __KERNEL_VERSION__`,
 
 	groupTitle:             `__NEW_LINE__🚛 ` + "`__NAME__`__NODE_NAME__" + ` __NEW_LINE__💿 __IMAGE__    __NEW_LINE__🕰️ __TIME__   __NEW_LINE__`,
 	groupFooter:            `__NEW_LINE__🆔 __ID__`,

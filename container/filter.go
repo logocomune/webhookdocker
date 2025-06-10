@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"docker.io/go-docker/api/types/events"
+	"github.com/docker/docker/api/types/events"
 )
 
 type filter struct {
@@ -43,15 +43,15 @@ func newFilter(cfg DockerCfg) (*filter, error) {
 	}
 
 	for _, s := range cfg.ContainerActions {
-		actions[containerEvent+s] = struct{}{}
+		actions[string(containerEvent)+s] = struct{}{}
 	}
 
 	for _, s := range cfg.NetworkActions {
-		actions[networkEvent+s] = struct{}{}
+		actions[string(networkEvent)+s] = struct{}{}
 	}
 
 	for _, s := range cfg.VolumeActions {
-		actions[volumeEvent+s] = struct{}{}
+		actions[string(volumeEvent)+s] = struct{}{}
 	}
 
 	return &filter{
@@ -86,14 +86,14 @@ func (f *filter) accept(event events.Message) bool {
 			}
 		}
 
-		typeEvent = containerEvent
+		typeEvent = string(containerEvent)
 	case events.NetworkEventType:
-		typeEvent = networkEvent
+		typeEvent = string(networkEvent)
 	case events.VolumeEventType:
-		typeEvent = volumeEvent
+		typeEvent = string(volumeEvent)
 	}
 
-	action := strings.Split(event.Action, ":")
+	action := strings.Split(string(event.Action), ":")
 
 	typeEvent += action[0]
 

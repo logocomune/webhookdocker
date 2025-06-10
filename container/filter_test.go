@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"testing"
 
-	"docker.io/go-docker/api/types/events"
+	"github.com/docker/docker/api/types/events"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,19 +23,19 @@ func Test_newFilter(t *testing.T) {
 	assert.NotNil(t, f)
 	assert.Equal(t, 6, len(f.actions))
 
-	_, ok := f.actions[containerEvent+"test"]
+	_, ok := f.actions[string(containerEvent)+"test"]
 	assert.True(t, ok)
-	_, ok = f.actions[containerEvent+"test1"]
-	assert.True(t, ok)
-
-	_, ok = f.actions[networkEvent+"test2"]
-	assert.True(t, ok)
-	_, ok = f.actions[networkEvent+"test3"]
+	_, ok = f.actions[string(containerEvent)+"test1"]
 	assert.True(t, ok)
 
-	_, ok = f.actions[volumeEvent+"test4"]
+	_, ok = f.actions[string(networkEvent)+"test2"]
 	assert.True(t, ok)
-	_, ok = f.actions[volumeEvent+"test5"]
+	_, ok = f.actions[string(networkEvent)+"test3"]
+	assert.True(t, ok)
+
+	_, ok = f.actions[string(volumeEvent)+"test4"]
+	assert.True(t, ok)
+	_, ok = f.actions[string(volumeEvent)+"test5"]
 	assert.True(t, ok)
 }
 
