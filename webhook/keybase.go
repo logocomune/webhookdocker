@@ -17,7 +17,7 @@ type KB struct {
 	formatter  formatter
 }
 
-//NewKB Initialize Keybase webhook sender
+// NewKB Initialize Keybase webhook sender
 func NewKB(webHookUlr string, timeOut time.Duration, externalInspectUrl string) *KB {
 	tr := &http.Transport{
 		DialContext: (&net.Dialer{
@@ -37,19 +37,19 @@ func NewKB(webHookUlr string, timeOut time.Duration, externalInspectUrl string) 
 	}
 }
 
-//Send Send a group of docker events to keybase webhook
+// Send Send a group of docker events to keybase webhook
 func (k *KB) Send(events map[string]message.ContainerEventsGroup) {
 	msg := ""
 
 	if e, ok := events[dockerWebhook]; ok {
-		str, _ := eventsToStr(k.formatter, e.NodeName, e)
+		str, _ := eventsToStr(k.formatter, e.NodeName, e, ">")
 		msg += str + "\n\n"
 
 		delete(events, dockerWebhook)
 	}
 
 	for _, g := range events {
-		str, _ := eventsToStr(k.formatter, g.NodeName, g)
+		str, _ := eventsToStr(k.formatter, g.NodeName, g, ">")
 		msg += str + "\n\n"
 	}
 

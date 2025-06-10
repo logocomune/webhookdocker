@@ -28,9 +28,10 @@ var (
 
 type cfgArgs struct {
 	webhookdocker.CommonCfg
-	Keybase webhookdocker.Keybase
-	Slack   webhookdocker.Slack
-	WebEx   webhookdocker.WebEx
+	Keybase    webhookdocker.Keybase
+	Slack      webhookdocker.Slack
+	WebEx      webhookdocker.WebEx
+	GoogleChat webhookdocker.GooogleChat
 }
 
 func main() {
@@ -79,5 +80,5 @@ func run() error {
 
 	defer log.Println("main : Completed")
 
-	return webhookdocker.MainProcess(cfg.CommonCfg, cfg.Keybase, cfg.Slack, cfg.WebEx, shortVersion, buildDate)
+	return webhookdocker.MainProcess(cfg.CommonCfg, cfg.Keybase, cfg.Slack, cfg.WebEx, cfg.GoogleChat, shortVersion, buildDate)
 }

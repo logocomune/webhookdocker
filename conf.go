@@ -34,3 +34,7 @@ type Slack struct {
 type WebEx struct {
 	Endpoint string `conf:"flag:webex-endpoint"`
 }
+
+type GooogleChat struct {
+	Endpoint string `conf:""`
+}

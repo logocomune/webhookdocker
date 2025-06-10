@@ -1,0 +1,67 @@
+package webhook
+
+import (
+	"log"
+	"net"
+	"net/http"
+	"time"
+
+	"github.com/logocomune/webhookdocker/message"
+)
+
+type GoogleChat struct {
+	webHookUlr string
+	formatter  formatter
+	client     *http.Client
+}
+
+type googleMessage struct {
+	Text string `json:"text"`
+}
+
+// NewWebEx Initialize WebEx webhook sender
+func NewGoogleChat(webHookUlr string, timeOut time.Duration, externalInspectUrl string) *GoogleChat {
+	tr := &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout: timeOut,
+		}).DialContext,
+	}
+
+	return &GoogleChat{
+		webHookUlr: webHookUlr,
+		client: &http.Client{
+			Transport: tr,
+			Timeout:   timeOut,
+		},
+		formatter: formatter{labels: googleChatLabel,
+			externalInspectUrl: externalInspectUrl},
+	}
+}
+
+func (s *GoogleChat) Send(events map[string]message.ContainerEventsGroup) {
+	msg := ""
+
+	if e, ok := events[dockerWebhook]; ok {
+		str, _ := eventsToStr(s.formatter, e.NodeName, e, "")
+		msg += str + "\n\n"
+
+		delete(events, dockerWebhook)
+	}
+
+	for _, g := range events {
+		str, _ := eventsToStr(s.formatter, g.NodeName, g, "")
+		msg += str + "\n\n"
+	}
+
+	if msg == "" {
+		return
+	}
+
+	sMsg := googleMessage{
+		Text: msg,
+	}
+
+	if err := postWebHook(s.client, s.webHookUlr, sMsg); err != nil {
+		log.Println("Google Chat, POST error:", err.Error())
+	}
+}

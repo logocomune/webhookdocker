@@ -53,14 +53,14 @@ func (s *Slack) Send(events map[string]message.ContainerEventsGroup) {
 	msg := ""
 
 	if e, ok := events[dockerWebhook]; ok {
-		str, _ := eventsToStr(s.formatter, e.NodeName, e)
+		str, _ := eventsToStr(s.formatter, e.NodeName, e, ">")
 		msg += str + "\n\n"
 
 		delete(events, dockerWebhook)
 	}
 
 	for _, g := range events {
-		str, _ := eventsToStr(s.formatter, g.NodeName, g)
+		str, _ := eventsToStr(s.formatter, g.NodeName, g, ">")
 		msg += str + "\n\n"
 	}
 

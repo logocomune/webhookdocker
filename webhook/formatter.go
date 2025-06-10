@@ -192,14 +192,14 @@ func buildMsg(events map[string]message.ContainerEventsGroup, w *WebEx) (string,
 	msg := ""
 
 	if e, ok := events[dockerWebhook]; ok {
-		str, _ := eventsToStr(w.formatter, e.NodeName, e)
+		str, _ := eventsToStr(w.formatter, e.NodeName, e, ">")
 		msg += str + "\n\n"
 
 		delete(events, dockerWebhook)
 	}
 
 	for _, g := range events {
-		str, _ := eventsToStr(w.formatter, g.NodeName, g)
+		str, _ := eventsToStr(w.formatter, g.NodeName, g, ">")
 		msg += str + "\n\n"
 	}
 
@@ -210,8 +210,8 @@ func buildMsg(events map[string]message.ContainerEventsGroup, w *WebEx) (string,
 	return msg, true
 }
 
-//eventsToStr Create a message string for a group of container events
-func eventsToStr(f formatter, nodeName string, eventsGroup message.ContainerEventsGroup) (string, bool) {
+// eventsToStr Create a message string for a group of container events
+func eventsToStr(f formatter, nodeName string, eventsGroup message.ContainerEventsGroup, eventSeparator string) (string, bool) {
 	s := f.startupMessage(nodeName, eventsGroup.StartupInfo)
 	if len(eventsGroup.Events) == 0 && s == "" {
 		return "", false
@@ -240,7 +240,7 @@ func eventsToStr(f formatter, nodeName string, eventsGroup message.ContainerEven
 		}
 
 		if idx != nEvents-1 {
-			s += "> \n"
+			s += eventSeparator + " \n"
 		} else {
 			s += f.footerMessage(containerID)
 		}

@@ -23,7 +23,7 @@ type sender interface {
 	Send(events map[string]message.ContainerEventsGroup)
 }
 
-func MainProcess(cfg CommonCfg, kb Keybase, sl Slack, ex WebEx, appVersion, builtDate string) error {
+func MainProcess(cfg CommonCfg, kb Keybase, sl Slack, ex WebEx, glChat GooogleChat, appVersion, builtDate string) error {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	shutdown := make(chan os.Signal, 1)
@@ -63,6 +63,9 @@ func MainProcess(cfg CommonCfg, kb Keybase, sl Slack, ex WebEx, appVersion, buil
 
 	if ex.Endpoint != "" {
 		wbSender = webhook.NewWebEx(ex.Endpoint, httpClientTimeOut, cfg.Docker.ExternalInstanceInspection)
+	}
+	if glChat.Endpoint != "" {
+		wbSender = webhook.NewGoogleChat(glChat.Endpoint, httpClientTimeOut, cfg.Docker.ExternalInstanceInspection)
 	}
 
 	if wbSender == nil {
