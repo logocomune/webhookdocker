@@ -1,4 +1,4 @@
-FROM golang:1.23.2-alpine3.20 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.23.10-alpine3.22 AS builder
 
 RUN apk add --no-cache git curl build-base  bash
 
@@ -11,13 +11,22 @@ WORKDIR /app
 
 COPY . .
 
+
+## Set env for multi arch build
+ARG TARGETOS TARGETARCH
+ENV GOOS=$TARGETOS
+ENV GOARCH=$TARGETARCH
+
+RUN echo "GOOS: $GOOS and GOARCH: $GOARCH"
+
+
 RUN ./build.sh webhook-docker
 
 
 
 
 
-FROM alpine:3.20
+FROM alpine:3.22
 
 WORKDIR /
 

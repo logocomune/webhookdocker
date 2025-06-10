@@ -30,4 +30,4 @@ echo "GOLANG FLAGS: $LDFLAGS"
 echo "Build executable: go build -ldflags "${LDFLAGS}" -o ${BINARY_NAME} ${BUILD_TARGET}"
 time  go build -ldflags "${LDFLAGS}" -o ${BINARY_NAME} ${BUILD_TARGET}
 
-strip ${BINARY_NAME}
+
