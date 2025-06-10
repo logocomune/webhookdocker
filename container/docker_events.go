@@ -80,9 +80,9 @@ func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg, 
 		},
 	}
 
-	for _, container := range containers {
+	for _, c := range containers {
 		if cfg.ShowRunning {
-			inspect, err := cli.ContainerInspect(ctx, container.ID)
+			inspect, err := cli.ContainerInspect(ctx, c.ID)
 			if err != nil {
 				continue
 			}
@@ -93,20 +93,20 @@ func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg, 
 			}
 			cEvnt <- message.Event{
 				MetaData: message.MetaData{
-					Type:   "container",
+					Type:   "c",
 					Action: "running",
 					Time:   creation,
 				},
 				StartupInfo: message.StartupInfo{},
 				Container: message.Container{
-					ID:    container.ID,
+					ID:    c.ID,
 					Name:  strings.TrimLeft(inspect.Name, "/"),
 					Image: inspect.Config.Image,
 				},
 			}
 		}
 
-		log.Printf("Running %s %s\n", container.ID[:10], container.Image)
+		log.Printf("Running %s %s\n", c.ID[:10], c.Image)
 	}
 
 	filterItems := filters.NewArgs()
@@ -141,7 +141,7 @@ func DockerEvents(ctx context.Context, cEvnt chan message.Event, cfg DockerCfg, 
 			}
 
 			if event.Type != events.ContainerEventType {
-				if _, ok := event.Actor.Attributes["container"]; !ok {
+				if _, ok := event.Actor.Attributes["c"]; !ok {
 					continue
 				}
 			}
